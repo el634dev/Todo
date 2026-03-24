@@ -15,6 +15,6 @@ class TodoViewModel: ViewModel() {
         //  Find task in the list
         val index = taskList.indexOf(task)
         //  Crates a copy of the task and flips it to the opposite
-        taskList[index] = taskList[index].copy(completed = !task)
+        taskList[index] = taskList[index].copy(completed = !task.completed)
     }
 }
