@@ -11,6 +11,10 @@ class TodoViewModel: ViewModel() {
         taskList.add(Task(body = body))
     }
 
+    fun deleteTask(task: Task) {
+        taskList.remove(task)
+    }
+
     fun toggleTaskCompleted(task: Task) {
         //  Find task in the list
         val index = taskList.indexOf(task)
