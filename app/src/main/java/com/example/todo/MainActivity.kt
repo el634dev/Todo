@@ -51,9 +51,63 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TodoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TodoScreen(
-                        modifier = Modifier.padding(innerPadding)
+                TodoScreen()
+            }
+        }
+    }
+}
+
+// ------------------------------------------------
+@Composable
+fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = viewModel()) {
+    var taskBody by remember { mutableStateOf("") }
+    Scaffold(
+
+    ) { innerPadding ->
+        Column(
+            modifier = modifier.fillMaxSize().padding(innerPadding)
+        ) {
+            TextField(
+                modifier = Modifier.fillMaxWidth().padding(6.dp),
+                value = taskBody,
+                onValueChange = { taskBody = it },
+                label = { Text("Enter task") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        todoViewModel.addTask(taskBody)
+                        taskBody = ""
+                    }
+                )
+            )
+            LazyColumn {
+                // Key will generate a unique id for each task
+                items(items = todoViewModel.taskList, key = { task -> task.id }) { task ->
+                    val currentTask by rememberUpdatedState(newValue = task)
+                    //  Defines the state box
+                    val dismissState = rememberSwipeToDismissBoxState(
+                        confirmValueChange = {
+                            //  it is the default variable for state, must be swiped to the right
+                            if (it == SwipeToDismissBoxValue.StartToEnd) {
+                                todoViewModel.deleteTask(currentTask)
+                                true
+                            } else {
+                                false
+                            }
+                        }
+                    )
+                    // -------------------------------------------
+                    SwipeToDismissBox(
+                        state = dismissState,
+                        backgroundContent = { SwipeBackground(dismissState) },
+                        content = {
+                            TaskCard(
+                                task,
+                                toggleCompleted = todoViewModel::toggleTaskCompleted
+                            )
+                        },
+                        modifier = Modifier.padding(vertical = 1.dp).animateItem()
                     )
                 }
             }
@@ -61,56 +115,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = viewModel()) {
-    var taskBody by remember { mutableStateOf("") }
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ){
-        TextField(
-            modifier = Modifier.fillMaxWidth().padding(6.dp),
-            value = taskBody,
-            onValueChange = { taskBody = it },
-            label = { Text("Enter task") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    todoViewModel.addTask(taskBody)
-                    taskBody = ""
-                }
-            )
-        )
-        LazyColumn{
-            // Key will generate a unique id for each task
-            items(items = todoViewModel.taskList, key = { task -> task.id }) {task ->
-                val currentTask by rememberUpdatedState(newValue = task)
-                //  Defines the state box
-                val dismissState = rememberSwipeToDismissBoxState(
-                    confirmValueChange = {
-                        //  It is the default variable for state, must be swiped to the right
-                        if(it == SwipeToDismissBoxValue.StartToEnd) {
-                            todoViewModel.deleteTask(currentTask)
-                            true
-                        } else {
-                            false
-                        }
-                    }
-                )
-                // -------------------------------------------
-                SwipeToDismissBox(
-                    state = dismissState,
-                    backgroundContent = {  SwipeBackground(dismissState) },
-                    content = { TaskCard(task, toggleCompleted = todoViewModel::toggleTaskCompleted) },
-                    modifier = Modifier.padding(vertical = 1.dp).animateItem()
-                )
-            }
-        }
-    }
-}
-
-// -----------------------------------------
+// -----------------------------------------------
 @Composable
 fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = Modifier) {
     val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
@@ -132,7 +138,7 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
     }
 }
 
-// -------------------------------------------
+// ------------------------------------------------
 @Composable
 fun TaskCard(task: Task, toggleCompleted: (Task) -> Unit, modifier: Modifier = Modifier) {
         Card(
@@ -157,7 +163,7 @@ fun TaskCard(task: Task, toggleCompleted: (Task) -> Unit, modifier: Modifier = M
         }
 }
 
-// -------------------------------------------
+// -----------------------------------------------
 @Preview(showBackground = true)
 @Composable
 fun TodoPreview() {
