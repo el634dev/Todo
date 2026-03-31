@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -84,12 +85,13 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
         LazyColumn{
             // Key will generate a unique id for each task
             items(items = todoViewModel.taskList, key = { task -> task.id }) {task ->
+                val currentTask by rememberUpdatedState(newValue = task)
                 //  Defines the state box
                 val dismissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = {
                         //  It is the default variable for state, must be swiped to the right
                         if(it == SwipeToDismissBoxValue.StartToEnd) {
-                            todoViewModel.deleteTask(task)
+                            todoViewModel.deleteTask(currentTask)
                             true
                         } else {
                             false
