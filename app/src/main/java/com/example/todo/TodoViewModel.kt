@@ -6,15 +6,30 @@ import androidx.lifecycle.ViewModel
 class TodoViewModel: ViewModel() {
     val taskList = mutableStateListOf<Task>()
 
+    fun populateTaskList() {
+        addTask(body = "Study")
+        addTask(body = "Buy tea")
+        addTask(body = "Buy eggs")
+        addTask(body = "Buy milk")
+        addTask(body = "Buy cheese")
+    }
+
+    fun depopulateTaskList() {
+//        Figuring it out
+    }
+
+    //    ------------------------------------------
     fun addTask(body: String) {
         //  Add a task and the body is to the one from the function
         taskList.add(Task(body = body))
     }
 
+    //    ------------------------------------------
     fun deleteTask(task: Task) {
         taskList.remove(task)
     }
 
+    //    ------------------------------------------
     fun toggleTaskCompleted(task: Task) {
         //  Find task in the list
         val index = taskList.indexOf(task)
