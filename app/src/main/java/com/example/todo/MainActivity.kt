@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -69,6 +70,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = viewModel()) {
     var taskBody by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -163,6 +165,8 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
 fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = Modifier) {
     val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
         Color.Red
+    } else if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+        Color.Green
     } else {
         Color.Transparent
     }
@@ -174,7 +178,33 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
         if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Delete"
+                contentDescription = "Delete task"
+            )
+        } else if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add task"
+            )
+        }
+    }
+}
+
+// --------------------------------------------------------------------
+// ---------------* SWIPE BACKGROUND FUNCTION *-------------------------
+@Composable
+fun SwipeToTheBottom(moveToBottom: (String) -> Unit, tasks: MutableList<String>, todoViewModel: TodoViewModel, removeTask: (Task) -> Unit) {
+    LazyColumn(
+
+    ) {
+        // Key will generate a unique id for each task
+        items(tasks, key = { it }) { task ->
+            val dismissState = rememberSwipeToDismissBoxState(
+                confirmValueChange = { dismissValue ->
+                    if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
+                        moveToBottom(task)
+                        false
+                    } else false
+                }
             )
         }
     }

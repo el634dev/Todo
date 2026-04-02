@@ -42,6 +42,18 @@ class TodoViewModel: ViewModel() {
         taskList[index] = taskList[index].copy(completed = !task.completed)
     }
 
+    //  --------------------------------------------------------------------------
+    // ---------------* REMOVE TASK + ADD TO THE BOTTOM OF LIST FUNCTION *---------
+    fun removeTask(task: Task) {
+        //  Find task in the list
+        val index = taskList.indexOf(task)
+
+        // Remove task
+        taskList.removeAt(index)
+        //  Add a copy of the task to the bottom of the list
+        taskList[index] = taskList[index].copy(completed = task.completed)
+    }
+
     // -------------------------------------------------------------
     // ---------------* UNCHECK ALL TASKS FUNCTION *----------------
     fun unCheckTask() {
