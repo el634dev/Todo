@@ -203,7 +203,9 @@ fun SwipeToTheBottom(moveToBottom: (String) -> Unit, tasks: MutableList<String>,
                     if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
                         moveToBottom(task)
                         false
-                    } else false
+                    } else {
+                        false
+                    }
                 }
             )
         }
