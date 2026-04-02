@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -81,12 +82,22 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
                             contentDescription = "Add task to list"
                         )
                     }
+                    // --------------------------------------------------------------------
                     IconButton(
                         onClick = { todoViewModel.depopulateTaskList() }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Clear to-do list"
+                        )
+                    }
+                    // --------------------------------------------------------------------
+                    IconButton(
+                        onClick = { todoViewModel.unCheckTask() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Uncheck all items"
                         )
                     }
                 }
@@ -127,7 +138,8 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
                             }
                         }
                     )
-                    // -------------------------------------------
+                    // --------------------------------------------------------------------
+                    // ---------------* SWIPE TO DISMISS BOX *-------------------------
                     SwipeToDismissBox(
                         state = dismissState,
                         backgroundContent = { SwipeBackground(dismissState) },
@@ -145,7 +157,8 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
     }
 }
 
-// -----------------------------------------------
+// --------------------------------------------------------------------
+// ---------------* SWIPE BACKGROUND FUNCTION *-------------------------
 @Composable
 fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = Modifier) {
     val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
@@ -167,7 +180,8 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
     }
 }
 
-// ------------------------------------------------
+// --------------------------------------------------------------------
+// ---------------* TASK CARD FUNCTION *-------------------------------
 @Composable
 fun TaskCard(task: Task, toggleCompleted: (Task) -> Unit, modifier: Modifier = Modifier) {
         Card(
