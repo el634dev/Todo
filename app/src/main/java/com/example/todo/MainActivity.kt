@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -190,7 +191,9 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete task"
             )
-        } else if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+        }
+        Spacer(modifier = modifier.weight(1f))
+        if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add task"
