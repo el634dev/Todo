@@ -37,9 +37,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -52,6 +55,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todo.ui.theme.TodoTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,8 +139,13 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
                             if (it == SwipeToDismissBoxValue.StartToEnd) {
                                 todoViewModel.deleteTask(currentTask)
                                 true
-                            } else {
+                            } else if(it == SwipeToDismissBoxValue.EndToStart){
+                                val index = todoViewModel.taskList.indexOf(task)
+                                todoViewModel.taskList.removeAt(index)
+                                todoViewModel.taskList.add(currentTask)
 
+                                false
+                            } else {
                                 false
                             }
                         }
@@ -191,58 +201,30 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
 
 // --------------------------------------------------------------------
 // ---------------* SWIPE BACKGROUND FUNCTION *-------------------------
-@Composable
-fun SwipeToTheBottom(moveToBottom: (String) -> Unit, tasks: MutableList<String>, todoViewModel: TodoViewModel, removeTask: (Task) -> Unit) {
-    LazyColumn(
 
-    ) {
-        // Key will generate a unique id for each task
-        items(tasks, key = { it }) { task ->
-            val dismissState = rememberSwipeToDismissBoxState(
-                confirmValueChange = { dismissValue ->
-                    if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                        moveToBottom(task)
-                        false
-                    } else {
-                        false
-                    }
-                }
-            )
-        }
-    }
-}
 
 // --------------------------------------------------------------------
 // ---------------* TASK CARD FUNCTION *-------------------------------
 @Composable
 fun TaskCard(task: Task, toggleCompleted: (Task) -> Unit, modifier: Modifier = Modifier) {
-        Card(
-            modifier = modifier.padding(8.dp).fillMaxWidth()
-        ){
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                Text(
-                    text = task.body,
-                    modifier = modifier.padding(start = 12.dp)
-                )
-                Checkbox(
-                    checked = task.completed,
-                    onCheckedChange = {
-                        toggleCompleted(task)
-                    }
-                )
-            }
+    Card(
+        modifier = modifier.padding(8.dp).fillMaxWidth()
+    ) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = task.body,
+                modifier = modifier.padding(start = 12.dp)
+            )
+            Checkbox(
+                checked = task.completed,
+                onCheckedChange = {
+                    toggleCompleted(task)
+                }
+            )
         }
-}
-
-// -----------------------------------------------
-@Preview(showBackground = true)
-@Composable
-fun TodoPreview() {
-    TodoTheme {
-        TodoScreen()
     }
 }
