@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
@@ -104,7 +105,7 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
                         onClick = { todoViewModel.unCheckTask() }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Done,
+                            imageVector = Icons.Default.CheckCircle,
                             contentDescription = "Uncheck all items"
                         )
                     }
