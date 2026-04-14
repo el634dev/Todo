@@ -93,11 +93,11 @@ fun TodoScreen(modifier: Modifier = Modifier, todoViewModel: TodoViewModel = vie
                     }
                     // --------------------------------------------------------------------
                     IconButton(
-                        onClick = { todoViewModel.depopulateTaskList() }
+                        onClick = { todoViewModel.deleteCheckTask() }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear to-do list"
+                            contentDescription = "Uncheck checked tasks"
                         )
                     }
                     // --------------------------------------------------------------------
@@ -202,10 +202,6 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
         }
     }
 }
-
-// --------------------------------------------------------------------
-// ---------------* SWIPE BACKGROUND FUNCTION *-------------------------
-
 
 // --------------------------------------------------------------------
 // ---------------* TASK CARD FUNCTION *-------------------------------

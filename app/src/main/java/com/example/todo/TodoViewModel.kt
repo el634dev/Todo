@@ -15,9 +15,9 @@ class TodoViewModel: ViewModel() {
     }
 
     //  -----------------------------------------------------------
-    // ---------------* CLEAR TASK LIST FUNCTION *-----------------
-    fun depopulateTaskList() {
-        taskList.clear()
+    // ---------------* CLEAR CHECKED TASKS FUNCTION *-----------------
+    fun deleteCheckTask() {
+        taskList.removeAll{ task -> task.completed}
     }
 
     //  -----------------------------------------------------------
